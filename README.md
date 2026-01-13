@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Step2Pay Business - Клиентская часть
 
-## Getting Started
+Клиентское приложение на Next.js 15 с App Router для платформы Step2Pay Business.
 
-First, run the development server:
+## Технологии
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Next.js 15** - React фреймворк с SSR/SSG
+- **TypeScript** - типизация
+- **Tailwind CSS** - стилизация
+- **Tanstack Query** - управление состоянием и кэширование данных
+- **Axios** - HTTP клиент для работы с API
+- **Radix UI** - UI компоненты
+
+## Структура проекта
+
+```
+step2pay-client/
+├── src/
+│   ├── app/                  # App Router страницы
+│   │   ├── layout.tsx        # Корневой layout
+│   │   ├── page.tsx          # Главная страница
+│   │   ├── sitemap.ts        # Генерация sitemap.xml
+│   │   └── robots.ts         # Генерация robots.txt
+│   ├── components/           # React компоненты
+│   │   ├── ui/              # UI компоненты (shadcn/ui)
+│   │   └── providers.tsx    # Query Client provider
+│   └── lib/                 # Утилиты и конфигурация
+│       ├── api.ts           # Axios клиент
+│       ├── query-client.ts  # React Query настройки
+│       └── utils.ts         # Общие утилиты
+├── public/                  # Статические файлы
+└── .env.local              # Переменные окружения
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Установка и запуск
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Установка зависимостей
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Запуск в режиме разработки
+npm run dev
 
-## Learn More
+# Сборка для продакшена
+npm run build
 
-To learn more about Next.js, take a look at the following resources:
+# Запуск продакшен версии
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Переменные окружения
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8080  # URL Rust API
+API_URL=http://localhost:8080              # URL для серверных запросов
+NEXT_PUBLIC_SITE_NAME=Step2Pay Business
+NEXT_PUBLIC_SITE_URL=https://aaa.sambacrm.online
+```
 
-## Deploy on Vercel
+## SEO оптимизация
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- ✅ SSR/SSG из коробки
+- ✅ Автоматическая генерация `sitemap.xml`
+- ✅ Автоматическая генерация `robots.txt`
+- ✅ Настройка метаданных через `Metadata API`
+- ✅ Open Graph теги
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Подключение к API
+
+API клиент настроен в `src/lib/api.ts` и использует Axios с interceptors для:
+- Автоматического добавления токенов авторизации
+- Обработки ошибок и редиректов
+
+Пример использования с React Query:
+
+```typescript
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api";
+
+function MyComponent() {
+  const { data } = useQuery({
+    queryKey: ["projects"],
+    queryFn: async () => {
+      const { data } = await apiClient.get("/api/projects");
+      return data;
+    },
+  });
+}
+```
