@@ -33,10 +33,7 @@ export function Header() {
 
           <div className="flex items-center gap-4">
             <Button variant="ghost" asChild>
-              <Link href="/login">Войти</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/signup">Регистрация</Link>
+              <Link href="/cabinet/login">Личный кабинет</Link>
             </Button>
           </div>
         </div>

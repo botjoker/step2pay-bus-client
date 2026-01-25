@@ -1,6 +1,8 @@
 import axios from "axios";
+import { tokenManager } from "./auth/token-manager";
+import { config } from "../local_config";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+const API_URL = config.api;
 
 export const apiClient = axios.create({
   baseURL: API_URL,
@@ -11,12 +13,11 @@ export const apiClient = axios.create({
 
 // Interceptor для добавления токена авторизации
 apiClient.interceptors.request.use(
-  (config) => {
-    // Если нужна авторизация, добавляем токен из localStorage или cookies
-    // const token = localStorage.getItem("token");
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+  async (config) => {
+    const token = await tokenManager.ensureValidToken();
+    if (token) {
+      config.headers.token = token;
+    }
     return config;
   },
   (error) => {
@@ -27,10 +28,39 @@ apiClient.interceptors.request.use(
 // Interceptor для обработки ошибок
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Перенаправление на страницу логина при неавторизованном доступе
-      // window.location.href = "/login";
+  async (error) => {
+    if (error.response?.status === 401 && !error.config._retry) {
+      error.config._retry = true;
+
+      const refreshToken = tokenManager.getRefreshToken();
+      if (refreshToken) {
+        try {
+          const response = await fetch(`${API_URL}/auth/refresh`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ refresh_token: refreshToken }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            tokenManager.saveTokens(data.token, data.refresh_token);
+            error.config.headers.token = data.token;
+            return apiClient(error.config);
+          }
+        } catch (refreshError) {
+          tokenManager.clearTokens();
+          if (typeof window !== "undefined") {
+            window.location.href = "/cabinet/login";
+          }
+        }
+      } else {
+        tokenManager.clearTokens();
+        if (typeof window !== "undefined") {
+          window.location.href = "/cabinet/login";
+        }
+      }
     }
     return Promise.reject(error);
   }
