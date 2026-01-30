@@ -6,6 +6,8 @@ import type {
   EventScheduleResponse,
   EventSponsorsResponse,
   EventStatsResponse,
+  PublicEventRegistrationRequest,
+  EventRegistrationResponse,
 } from "@/lib/types/events";
 
 const API_URL = config.api;
@@ -66,6 +68,24 @@ export const publicEventsApi = {
   getEventStats: async (eventId: string) => {
     const { data } = await publicApiClient.get<EventStatsResponse>(
       `/public/events/${eventId}/stats`
+    );
+    return data;
+  },
+
+  // Регистрация на событие по ID
+  registerForEvent: async (eventId: string, request: PublicEventRegistrationRequest) => {
+    const { data } = await publicApiClient.post<EventRegistrationResponse>(
+      `/public/events/${eventId}/register`,
+      request
+    );
+    return data;
+  },
+
+  // Регистрация на событие по slug
+  registerForEventBySlug: async (slug: string, request: PublicEventRegistrationRequest) => {
+    const { data } = await publicApiClient.post<EventRegistrationResponse>(
+      `/public/events/slug/${slug}/register`,
+      request
     );
     return data;
   },

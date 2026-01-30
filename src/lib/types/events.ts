@@ -88,3 +88,26 @@ export interface EventStatsResponse {
   success: boolean;
   data: EventStats;
 }
+
+// Публичная регистрация
+export interface PublicEventRegistrationRequest {
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  position?: string;
+}
+
+export interface PublicEventRegistrationResponse {
+  id: string;
+  event_id: string;
+  name: string;
+  email: string;
+  qr_code: string;
+  status: string;
+}
+
+export interface EventRegistrationResponse {
+  success: boolean;
+  data: PublicEventRegistrationResponse;
+}

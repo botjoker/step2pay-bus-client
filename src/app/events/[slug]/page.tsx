@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { publicEventsApi } from "@/lib/api/events";
 import { Card } from "@/components/ui/card";
+import { EventRegistrationForm } from "@/components/events/event-registration-form";
 
 export default function EventDetailPage() {
   const params = useParams();
@@ -144,6 +145,93 @@ export default function EventDetailPage() {
             <p className="whitespace-pre-wrap text-gray-700">{event.description}</p>
           </div>
         </Card>
+      )}
+
+      {/* Форма регистрации или статус события */}
+      {event.registration_required && (
+        <div className="mb-8">
+          {event.stage === "registration" ? (
+            <EventRegistrationForm
+              eventId={event.id}
+              eventSlug={event.slug}
+              eventTitle={event.title}
+            />
+          ) : (
+            <Card className="p-6">
+              <div className="text-center">
+                {event.stage === "comming" && (
+                  <>
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4">
+                      <svg
+                        className="w-8 h-8 text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">Мероприятие готовится</h3>
+                    <p className="text-gray-600">Регистрация откроется позже</p>
+                  </>
+                )}
+                {event.stage === "started" && (
+                  <>
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
+                      <svg
+                        className="w-8 h-8 text-green-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">Мероприятие началось</h3>
+                    <p className="text-gray-600">Регистрация закрыта</p>
+                  </>
+                )}
+                {event.stage === "ended" && (
+                  <>
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+                      <svg
+                        className="w-8 h-8 text-gray-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">Мероприятие завершено</h3>
+                    <p className="text-gray-600">Спасибо всем участникам!</p>
+                  </>
+                )}
+              </div>
+            </Card>
+          )}
+        </div>
       )}
 
       {/* Программа */}
