@@ -16,6 +16,9 @@ export interface Event {
   address?: string;
   city?: string;
   coordinates?: string;
+  registration_required?: boolean;
+  registration_start?: string;
+  registration_end?: string;
   max_participants?: number;
   current_participants: number;
   age_restriction?: string;
