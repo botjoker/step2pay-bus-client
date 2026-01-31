@@ -32,9 +32,7 @@ export default function RootLayout({
       <body className={`${inter.className} flex flex-col min-h-screen`}>
         <Providers>
           <AuthProvider>
-            <Header />
             <main className="flex-1">{children}</main>
-            <Footer />
           </AuthProvider>
         </Providers>
       </body>
