@@ -99,6 +99,8 @@ export interface PublicEventRegistrationRequest {
   phone?: string;
   company?: string;
   position?: string;
+  nomination_id?: string;
+  custom_fields?: Record<string, any>;
 }
 
 export interface PublicEventRegistrationResponse {
@@ -113,4 +115,35 @@ export interface PublicEventRegistrationResponse {
 export interface EventRegistrationResponse {
   success: boolean;
   data: PublicEventRegistrationResponse;
+}
+
+// Nomination для публичного API (плоский список)
+export interface PublicNomination {
+  id: string;
+  name: string;
+  description?: string;
+  level: number;
+  sort_order: number;
+  parent_id?: string;
+  registration_fee?: string;
+}
+
+export interface PublicNominationsResponse {
+  success: boolean;
+  data: PublicNomination[];
+}
+
+// Registration fields
+export interface RegistrationField {
+  id: string;
+  type: string;
+  label: string;
+  required: boolean;
+  placeholder?: string;
+  options?: string[];
+}
+
+export interface RegistrationFieldsResponse {
+  success: boolean;
+  data: RegistrationField[];
 }

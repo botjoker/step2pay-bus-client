@@ -8,6 +8,8 @@ import type {
   EventStatsResponse,
   PublicEventRegistrationRequest,
   EventRegistrationResponse,
+  PublicNominationsResponse,
+  RegistrationFieldsResponse,
 } from "@/lib/types/events";
 
 const API_URL = config.api;
@@ -86,6 +88,22 @@ export const publicEventsApi = {
     const { data } = await publicApiClient.post<EventRegistrationResponse>(
       `/public/events/slug/${slug}/register`,
       request
+    );
+    return data;
+  },
+
+  // Получение номинаций события
+  getEventNominations: async (eventId: string) => {
+    const { data } = await publicApiClient.get<PublicNominationsResponse>(
+      `/public/events/${eventId}/nominations`
+    );
+    return data;
+  },
+
+  // Получение кастомных полей регистрации
+  getEventRegistrationFields: async (eventId: string) => {
+    const { data } = await publicApiClient.get<RegistrationFieldsResponse>(
+      `/public/events/${eventId}/registration-fields`
     );
     return data;
   },
