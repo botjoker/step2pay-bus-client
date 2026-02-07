@@ -49,7 +49,7 @@ export function EventRegistrationForm({ eventId, eventSlug, eventTitle }: EventR
     queryFn: () => publicEventsApi.getEventRegistrationFields(eventId),
   });
 
-  const nominations = nominationsData || [];
+  const nominations = nominationsData?.data || [];
   const customFields = fieldsData?.data || [];
 
   // Фильтруем номинации по уровням и parent_id
