@@ -49,8 +49,9 @@ export function EventRegistrationForm({ eventId, eventSlug, eventTitle }: EventR
     queryFn: () => publicEventsApi.getEventRegistrationFields(eventId),
   });
 
-  const nominations = nominationsData?.data || [];
+  const nominations = Array.isArray(nominationsData) ? nominationsData : (nominationsData?.data || []);
   const customFields = fieldsData?.data || [];
+
 
   // Фильтруем номинации по уровням и parent_id
   const level1Nominations = nominations.filter((n) => n.level === 1);
@@ -400,7 +401,7 @@ export function EventRegistrationForm({ eventId, eventSlug, eventTitle }: EventR
           {/* Номинации */}
           {nominations.length > 0 && (
             <div className="pt-4 space-y-4">
-              <h3 className="font-medium text-sm">Номинация</h3>
+              <h3 className="font-medium text-xl">Номинация</h3>
 
               {/* Уровень 1 */}
               {level1Nominations.length > 0 && (
