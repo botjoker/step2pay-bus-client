@@ -29,10 +29,10 @@ export function TextBlock({ content }: TextBlockProps) {
       <div className="container mx-auto px-4">
         {content.text && (
           <div 
-            className="prose max-w-none [&_h1]:text-5xl [&_h1]:font-bold [&_h2]:text-4xl [&_h2]:font-bold [&_h3]:text-3xl [&_h3]:font-bold [&_h4]:text-2xl [&_h4]:font-bold [&_h5]:text-xl [&_h5]:font-bold"
+            className="prose max-w-none [&_h1]:text-5xl [&_h1]:font-bold [&_h1]:font-playfair [&_h2]:text-4xl [&_h2]:font-bold [&_h2]:font-playfair [&_h3]:text-3xl [&_h3]:font-bold [&_h4]:text-2xl [&_h4]:font-semibold [&_h5]:text-xl [&_h5]:font-semibold [&_p]:text-lg [&_p]:leading-relaxed"
             style={{ 
               color: content.text_color || '#000000',
-              textAlign: content.text_align || 'left',
+              textAlign: (content.text_align || 'left') as React.CSSProperties['textAlign'],
             }}
             dangerouslySetInnerHTML={{ __html: content.text }}
           />

@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Montserrat, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { AuthProvider } from "@/contexts/auth-context";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
-const inter = Inter({ subsets: ["latin", "cyrillic"] });
+const montserrat = Montserrat({ 
+  subsets: ["latin", "cyrillic"],
+  variable: '--font-montserrat',
+});
+
+const playfair = Playfair_Display({ 
+  subsets: ["latin", "cyrillic"],
+  variable: '--font-playfair',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -29,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
+      <body className={`${montserrat.variable} ${playfair.variable} ${montserrat.className} flex flex-col min-h-screen`}>
         <Providers>
           <AuthProvider>
             <main className="flex-1">{children}</main>

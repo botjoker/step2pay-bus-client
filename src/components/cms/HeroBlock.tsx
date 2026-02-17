@@ -30,7 +30,7 @@ export function HeroBlock({ content }: HeroBlockProps) {
       <div className="container mx-auto px-4 py-12 relative z-10">
         {content.text && (
           <div 
-            className="prose prose-invert max-w-3xl [&_h1]:text-5xl [&_h1]:font-bold [&_h2]:text-4xl [&_h2]:font-bold [&_h3]:text-3xl [&_h3]:font-bold [&_h4]:text-2xl [&_h4]:font-bold [&_h5]:text-xl [&_h5]:font-bold"
+            className="prose prose-invert max-w-3xl [&_h1]:text-6xl [&_h1]:font-bold [&_h1]:font-playfair [&_h2]:text-5xl [&_h2]:font-bold [&_h2]:font-playfair [&_h3]:text-4xl [&_h3]:font-bold [&_h4]:text-3xl [&_h4]:font-semibold [&_h5]:text-2xl [&_h5]:font-semibold [&_p]:text-lg [&_p]:leading-relaxed"
             style={{ color: content.text_color || '#ffffff' }}
             dangerouslySetInnerHTML={{ __html: content.text }}
           />
