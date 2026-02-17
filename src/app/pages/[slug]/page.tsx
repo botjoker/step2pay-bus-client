@@ -35,7 +35,24 @@ export default function PublicCmsPage() {
   const params = useParams()
   const searchParams = useSearchParams()
   const slug = params.slug as string
-  const domain = searchParams.get('domain')
+  
+  // Получаем домен из hostname или query параметра (для локальной разработки)
+  const getDomain = () => {
+    if (typeof window === 'undefined') return null
+    
+    const hostname = window.location.hostname
+    
+    // Локальная разработка - используем query параметр
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return searchParams.get('domain')
+    }
+    
+    // Продакшн - извлекаем поддомен из hostname (aaa.sambacrm.online -> aaa)
+    const parts = hostname.split('.')
+    return parts.length > 1 ? parts[0] : null
+  }
+  
+  const domain = getDomain()
 
   const { data: page, isLoading, error } = useQuery<PublicPageData>({
     queryKey: ['public-cms-page', slug, domain],
@@ -53,10 +70,10 @@ export default function PublicCmsPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Параметр domain не найден
+            Домен не определен
           </h1>
           <p className="text-gray-600">
-            Добавьте ?domain=YOUR_DOMAIN в URL
+            Для локальной разработки добавьте ?domain=YOUR_DOMAIN в URL
           </p>
         </div>
       </div>
