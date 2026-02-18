@@ -11,8 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 
 interface EventRegistrationFormProps {
   eventId: string;
@@ -484,10 +484,18 @@ export function EventRegistrationForm({ eventId, eventSlug, eventTitle }: EventR
 
           {registerMutation.isError && (
             <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Ошибка регистрации</AlertTitle>
               <AlertDescription>
-                {registerMutation.error instanceof Error
-                  ? registerMutation.error.message
-                  : "Ошибка регистрации. Попробуйте еще раз."}
+                {(() => {
+                  const err = registerMutation.error as any;
+                  return (
+                    err?.response?.data?.error ||
+                    err?.response?.data?.message ||
+                    err?.message ||
+                    "Попробуйте ещё раз."
+                  );
+                })()}
               </AlertDescription>
             </Alert>
           )}
