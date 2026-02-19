@@ -38,18 +38,6 @@ export default function CabinetPage() {
     enabled: !!hasEvents,
   });
 
-  // Получаем публичные настройки тенанта
-  const { data: publicSettings } = useQuery<PublicSettings>({
-    queryKey: ["publicSettings", user?.domain],
-    queryFn: async () => {
-      if (!user?.domain) throw new Error("Domain not found");
-      const response = await apiClient.get(
-        `/public/settings?domain=${user.domain}`
-      );
-      return response.data;
-    },
-    enabled: !!user?.domain,
-  });
 
   if (!user) return null;
 
