@@ -67,7 +67,7 @@ export interface MediaFile {
 
 export const submissionsApi = {
   list: async (eventId: string): Promise<Submission[]> => {
-    const { data } = await apiClient.get(`/api/client/events/${eventId}/submissions`);
+    const { data } = await apiClient.get(`/api/client/events/${eventId}/submissions/list`);
     return data.data;
   },
 
@@ -82,7 +82,7 @@ export const submissionsApi = {
     sound_notes?: string;
     stage_notes?: string;
   }): Promise<Submission> => {
-    const { data } = await apiClient.post(`/api/client/events/${eventId}/submissions`, payload);
+    const { data } = await apiClient.post(`/api/client/events/${eventId}/submissions/create`, payload);
     return data.data;
   },
 
@@ -97,12 +97,12 @@ export const submissionsApi = {
     sound_notes: string;
     stage_notes: string;
   }>): Promise<Submission> => {
-    const { data } = await apiClient.put(`/api/client/events/${eventId}/submissions/${id}`, payload);
+    const { data } = await apiClient.put(`/api/client/events/${eventId}/submissions/${id}/update`, payload);
     return data.data;
   },
 
   delete: async (eventId: string, id: string): Promise<void> => {
-    await apiClient.delete(`/api/client/events/${eventId}/submissions/${id}`);
+    await apiClient.delete(`/api/client/events/${eventId}/submissions/${id}/delete`);
   },
 
   submit: async (eventId: string, id: string): Promise<Submission> => {
@@ -116,7 +116,7 @@ export const submissionsApi = {
 export const submissionPropsApi = {
   list: async (eventId: string, submissionId: string): Promise<SubmissionProp[]> => {
     const { data } = await apiClient.get(
-      `/api/client/events/${eventId}/submissions/${submissionId}/props`
+      `/api/client/events/${eventId}/submissions/${submissionId}/props/list`
     );
     return data;
   },
@@ -127,7 +127,7 @@ export const submissionPropsApi = {
     quantity?: number;
   }): Promise<SubmissionProp> => {
     const { data } = await apiClient.post(
-      `/api/client/events/${eventId}/submissions/${submissionId}/props`,
+      `/api/client/events/${eventId}/submissions/${submissionId}/props/create`,
       payload
     );
     return data.data;
@@ -135,7 +135,7 @@ export const submissionPropsApi = {
 
   delete: async (eventId: string, submissionId: string, propId: string): Promise<void> => {
     await apiClient.delete(
-      `/api/client/events/${eventId}/submissions/${submissionId}/props/${propId}`
+      `/api/client/events/${eventId}/submissions/${submissionId}/props/${propId}/delete`
     );
   },
 };
@@ -145,7 +145,7 @@ export const submissionPropsApi = {
 export const submissionPhonogramsApi = {
   list: async (eventId: string, submissionId: string): Promise<Phonogram[]> => {
     const { data } = await apiClient.get(
-      `/api/client/events/${eventId}/submissions/${submissionId}/phonograms`
+      `/api/client/events/${eventId}/submissions/${submissionId}/phonograms/list`
     );
     return data.data;
   },
@@ -172,7 +172,7 @@ export const submissionPhonogramsApi = {
 
     // Шаг 2: создать фонограмму и прикрепить к заявке
     const { data } = await apiClient.post(
-      `/api/client/events/${eventId}/submissions/${submissionId}/phonograms`,
+      `/api/client/events/${eventId}/submissions/${submissionId}/phonograms/create`,
       {
         media_id: mediaId,
         title: meta.title || file.name.replace(/\.[^.]+$/, ""),
@@ -185,7 +185,7 @@ export const submissionPhonogramsApi = {
 
   detach: async (eventId: string, submissionId: string, phonogramId: string): Promise<void> => {
     await apiClient.delete(
-      `/api/client/events/${eventId}/submissions/${submissionId}/phonograms/${phonogramId}`
+      `/api/client/events/${eventId}/submissions/${submissionId}/phonograms/${phonogramId}/delete`
     );
   },
 };
