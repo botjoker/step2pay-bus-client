@@ -46,6 +46,9 @@ export interface ClientUser {
   specialist_email?: string;
   position?: string;
   specialization?: string;
+
+  // Включённые модули тенанта
+  enabled_modules?: string[];
 }
 
 export interface JWTPayload {

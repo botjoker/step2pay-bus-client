@@ -1,5 +1,6 @@
 import axios from "axios";
 import { config } from "../../local_config";
+import { apiClient } from "@/lib/api";
 import type {
   EventsListResponse,
   EventResponse,
@@ -106,5 +107,36 @@ export const publicEventsApi = {
       `/public/events/${eventId}/registration-fields`
     );
     return data;
+  },
+};
+
+// API для авторизованного клиента
+export interface MyRegistration {
+  id: string;
+  event_id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  company?: string;
+  status: string;
+  qr_code?: string;
+  registered_at?: string;
+  event: {
+    title: string;
+    slug?: string;
+    start_date: string;
+    end_date?: string;
+    address?: string;
+    stage?: string;
+    cover_image?: string;
+  };
+}
+
+export const clientEventsApi = {
+  getMyRegistrations: async (): Promise<MyRegistration[]> => {
+    const { data } = await apiClient.get<{ success: boolean; data: MyRegistration[] }>(
+      "/api/client/events/my-registrations"
+    );
+    return data.data;
   },
 };

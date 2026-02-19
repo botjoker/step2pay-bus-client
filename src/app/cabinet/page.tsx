@@ -16,17 +16,27 @@ import {
   Briefcase,
   Building2,
   Calendar,
+  ChevronRight,
+  Ticket,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/lib/api";
-
-interface PublicSettings {
-  domain: string;
-  settings: Record<string, any>;
-}
+import { useRouter } from "next/navigation";
+import { clientEventsApi } from "@/lib/api/events";
 
 export default function CabinetPage() {
   const { user } = useAuth();
+  const router = useRouter();
+
+  // Показываем если модуль явно включён, или если таблица modules не заполнена (пустой список)
+  const modules = user?.enabled_modules;
+  const hasEvents = !modules?.length || modules.includes("events");
+
+  // Регистрации подгружаем только если модуль включён
+  const { data: registrations } = useQuery({
+    queryKey: ["myRegistrations"],
+    queryFn: clientEventsApi.getMyRegistrations,
+    enabled: !!hasEvents,
+  });
 
   // Получаем публичные настройки тенанта
   const { data: publicSettings } = useQuery<PublicSettings>({
@@ -203,53 +213,49 @@ export default function CabinetPage() {
         )}
       </div>
 
-      {/* Tenant Public Settings */}
-      {publicSettings?.settings &&
-        Object.keys(publicSettings.settings).length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Building2 className="mr-2 h-5 w-5 text-blue-600" />
-                Настройки организации
-              </CardTitle>
-              <CardDescription>
-                Публичные настройки вашей организации
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {Object.entries(publicSettings.settings).map(([key, value]) => (
-                  <div key={key} className="border-b border-gray-200 pb-3 last:border-0">
-                    <p className="text-sm font-medium text-gray-700 mb-1">
-                      {formatSettingKey(key)}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {formatSettingValue(value)}
-                    </p>
+      {/* Мои мероприятия — только если модуль включён */}
+      {hasEvents && (
+        <Card
+          className="cursor-pointer hover:shadow-md transition-shadow border-blue-100"
+          onClick={() => router.push("/cabinet/events")}
+        >
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center justify-between">
+              <span className="flex items-center">
+                <Ticket className="mr-2 h-5 w-5 text-blue-600" />
+                Мои мероприятия
+              </span>
+              <ChevronRight className="h-5 w-5 text-gray-400" />
+            </CardTitle>
+            <CardDescription>Мероприятия, на которые вы зарегистрированы</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!registrations || registrations.length === 0 ? (
+              <p className="text-sm text-gray-500">Нет активных регистраций</p>
+            ) : (
+              <div className="space-y-2">
+                {registrations.slice(0, 3).map((reg) => (
+                  <div key={reg.id} className="flex items-center justify-between text-sm">
+                    <span className="font-medium truncate max-w-[60%]">{reg.event.title}</span>
+                    <span className="text-gray-500 shrink-0">
+                      {new Date(reg.event.start_date).toLocaleDateString("ru-RU", {
+                        day: "numeric",
+                        month: "short",
+                      })}
+                    </span>
                   </div>
                 ))}
+                {registrations.length > 3 && (
+                  <p className="text-xs text-blue-600 mt-1">
+                    +{registrations.length - 3} ещё
+                  </p>
+                )}
               </div>
-            </CardContent>
-          </Card>
-        )}
+            )}
+          </CardContent>
+        </Card>
+      )}
+
     </div>
   );
-}
-
-// Вспомогательные функции для форматирования настроек
-function formatSettingKey(key: string): string {
-  return key
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
-
-function formatSettingValue(value: any): string {
-  if (typeof value === "boolean") {
-    return value ? "Да" : "Нет";
-  }
-  if (typeof value === "object") {
-    return JSON.stringify(value, null, 2);
-  }
-  return String(value);
 }
