@@ -378,26 +378,6 @@ export function EventRegistrationForm({ eventId, eventSlug, eventTitle }: EventR
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="company">Компания</Label>
-            <Input
-              id="company"
-              value={formData.company}
-              onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-              placeholder="ООО &quot;Компания&quot;"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="position">Должность</Label>
-            <Input
-              id="position"
-              value={formData.position}
-              onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-              placeholder="Менеджер"
-            />
-          </div>
-
           {/* Номинации */}
           {nominations.length > 0 && (
             <div className="pt-4 space-y-4">
