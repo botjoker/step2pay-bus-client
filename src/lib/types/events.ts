@@ -96,11 +96,15 @@ export interface EventStatsResponse {
 export interface PublicEventRegistrationRequest {
   name: string;
   email: string;
-  phone?: string;
+  phone: string;
   company?: string;
   position?: string;
   nomination_id?: string;
   custom_fields?: Record<string, any>;
+  team_size: number;
+  reg_city: string;
+  vk_contact?: string;
+  contact2?: string;
 }
 
 export interface PublicEventRegistrationResponse {

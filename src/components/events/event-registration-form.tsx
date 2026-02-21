@@ -28,6 +28,10 @@ export function EventRegistrationForm({ eventId, eventSlug, eventTitle }: EventR
     company: "",
     position: "",
     custom_fields: {},
+    team_size: 1,
+    reg_city: "",
+    vk_contact: "",
+    contact2: "",
   });
   const [registered, setRegistered] = useState(false);
   const [qrCode, setQrCode] = useState<string>("");
@@ -106,12 +110,35 @@ export function EventRegistrationForm({ eventId, eventSlug, eventTitle }: EventR
         company: "",
         position: "",
         custom_fields: {},
+        team_size: 1,
+        reg_city: "",
+        vk_contact: "",
+        contact2: "",
       });
       setSelectedLevel1("");
       setSelectedLevel2("");
       setSelectedLevel3("");
     },
   });
+
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, "");
+    if (!digits) return "";
+    let result = "+";
+    if (digits.length >= 1) result += digits[0];
+    if (digits.length >= 2) result += " " + digits.slice(1, 4);
+    if (digits.length >= 5) result += " " + digits.slice(4, 7);
+    if (digits.length >= 8) result += "-" + digits.slice(7, 9);
+    if (digits.length >= 10) result += "-" + digits.slice(9, 11);
+    return result;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    const digits = raw.replace(/\D/g, "");
+    const limited = digits.slice(0, 11);
+    setFormData({ ...formData, phone: formatPhone(limited) });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -368,13 +395,57 @@ export function EventRegistrationForm({ eventId, eventSlug, eventTitle }: EventR
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Телефон</Label>
+            <Label htmlFor="phone">Телефон *</Label>
             <Input
               id="phone"
               type="tel"
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              placeholder="+7 (999) 123-45-67"
+              onChange={handlePhoneChange}
+              required
+              placeholder="+7 999 999-99-99"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="team_size">Кол-во участников в команде *</Label>
+            <Input
+              id="team_size"
+              type="number"
+              min={1}
+              value={formData.team_size}
+              onChange={(e) => setFormData({ ...formData, team_size: parseInt(e.target.value) || 1 })}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="reg_city">Город *</Label>
+            <Input
+              id="reg_city"
+              value={formData.reg_city}
+              onChange={(e) => setFormData({ ...formData, reg_city: e.target.value })}
+              required
+              placeholder="Москва"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="vk_contact">ВКонтакте (ссылка на профиль или группу)</Label>
+            <Input
+              id="vk_contact"
+              value={formData.vk_contact || ""}
+              onChange={(e) => setFormData({ ...formData, vk_contact: e.target.value })}
+              placeholder="https://vk.com/id..."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="contact2">Дополнительный контакт</Label>
+            <Input
+              id="contact2"
+              value={formData.contact2 || ""}
+              onChange={(e) => setFormData({ ...formData, contact2: e.target.value })}
+              placeholder="Telegram, WhatsApp и т.д."
             />
           </div>
 
