@@ -476,7 +476,7 @@ export function EventRegistrationForm({ eventId, eventSlug, eventTitle }: EventR
 
           {/* Кастомные поля */}
           {customFields.length > 0 && (
-            <div className="border-t pt-4 space-y-4">
+            <div className="pt-4 space-y-4">
               <h3 className="font-medium text-sm">Дополнительная информация</h3>
               {customFields.map((field) => renderCustomField(field))}
             </div>
