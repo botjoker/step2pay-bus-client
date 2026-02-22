@@ -25,6 +25,7 @@ export interface Event {
   cover_image?: string;
   status: string;
   stage?: string;
+  tickets_config_id?: string;
   custom_fields?: any;
   created_at: string;
   updated_at: string;

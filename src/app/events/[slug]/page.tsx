@@ -4,12 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
+import { useRouter } from "next/navigation";
 import { publicEventsApi } from "@/lib/api/events";
 import { Card } from "@/components/ui/card";
 import { EventRegistrationForm } from "@/components/events/event-registration-form";
 
 export default function EventDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const slug = params.slug as string;
 
   // Проверяем, является ли slug UUID
@@ -143,6 +145,28 @@ export default function EventDetailPage() {
           <h2 className="text-2xl font-bold mb-4">О мероприятии</h2>
           <div className="prose max-w-none">
             <p className="whitespace-pre-wrap text-gray-700">{event.description}</p>
+          </div>
+        </Card>
+      )}
+
+      {/* Билеты */}
+      {event.tickets_config_id && (
+        <Card className="p-6 mb-8">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h2 className="text-2xl font-bold">Билеты</h2>
+              <p className="text-gray-500 text-sm mt-1">Выберите места и оформите покупку</p>
+            </div>
+            <button
+              onClick={() => router.push(`/events/${slug}/tickets`)}
+              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+              </svg>
+              Выбрать места
+            </button>
           </div>
         </Card>
       )}
