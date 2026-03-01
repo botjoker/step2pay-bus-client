@@ -115,14 +115,16 @@ export default function PaymentPage() {
     )
   }
 
-  if (orderData.status !== 'pending') {
+  const isTerminalStatus = ['completed', 'paid', 'expired', 'cancelled'].includes(orderData.status)
+
+  if (isTerminalStatus) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Заказ уже обработан</CardTitle>
             <CardDescription>
-              {orderData.status === 'paid' && 'Этот счет уже оплачен'}
+              {(orderData.status === 'paid' || orderData.status === 'completed') && 'Этот счет уже оплачен'}
               {orderData.status === 'expired' && 'Срок действия счета истек'}
               {orderData.status === 'cancelled' && 'Счет отменен'}
             </CardDescription>
@@ -231,6 +233,12 @@ export default function PaymentPage() {
                 `Оплатить ${orderData.amount} ₽`
               )}
             </Button>
+
+            {orderData.status === 'failed' && !error && (
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-800">
+                Предыдущая попытка оплаты не была завершена. Вы можете попробовать снова.
+              </div>
+            )}
 
             {error && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-800">
