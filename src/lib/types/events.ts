@@ -27,6 +27,10 @@ export interface Event {
   stage?: string;
   tickets_config_id?: string;
   custom_fields?: any;
+  show_team_size?: boolean;
+  show_reg_city?: boolean;
+  show_vk_contact?: boolean;
+  show_contact2?: boolean;
   created_at: string;
   updated_at: string;
 }

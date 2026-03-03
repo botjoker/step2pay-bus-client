@@ -179,6 +179,10 @@ export default function EventDetailPage() {
               eventId={event.id}
               eventSlug={event.slug}
               eventTitle={event.title}
+              showTeamSize={event.show_team_size !== false}
+              showRegCity={event.show_reg_city !== false}
+              showVkContact={event.show_vk_contact !== false}
+              showContact2={event.show_contact2 !== false}
             />
           ) : (
             <Card className="p-6">

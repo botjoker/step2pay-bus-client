@@ -18,9 +18,13 @@ interface EventRegistrationFormProps {
   eventId: string;
   eventSlug?: string;
   eventTitle: string;
+  showTeamSize?: boolean;
+  showRegCity?: boolean;
+  showVkContact?: boolean;
+  showContact2?: boolean;
 }
 
-export function EventRegistrationForm({ eventId, eventSlug, eventTitle }: EventRegistrationFormProps) {
+export function EventRegistrationForm({ eventId, eventSlug, eventTitle, showTeamSize = true, showRegCity = true, showVkContact = true, showContact2 = true }: EventRegistrationFormProps) {
   const [formData, setFormData] = useState<PublicEventRegistrationRequest>({
     name: "",
     email: "",
@@ -406,48 +410,56 @@ export function EventRegistrationForm({ eventId, eventSlug, eventTitle }: EventR
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="team_size">Кол-во участников в команде *</Label>
-            <Input
-              id="team_size"
-              type="number"
-              min={1}
-              value={formData.team_size}
-              onChange={(e) => setFormData({ ...formData, team_size: parseInt(e.target.value) || 1 })}
-              required
-            />
-          </div>
+          {showTeamSize && (
+            <div className="space-y-2">
+              <Label htmlFor="team_size">Кол-во участников в команде *</Label>
+              <Input
+                id="team_size"
+                type="number"
+                min={1}
+                value={formData.team_size}
+                onChange={(e) => setFormData({ ...formData, team_size: parseInt(e.target.value) || 1 })}
+                required
+              />
+            </div>
+          )}
 
-          <div className="space-y-2">
-            <Label htmlFor="reg_city">Город *</Label>
-            <Input
-              id="reg_city"
-              value={formData.reg_city}
-              onChange={(e) => setFormData({ ...formData, reg_city: e.target.value })}
-              required
-              placeholder="Москва"
-            />
-          </div>
+          {showRegCity && (
+            <div className="space-y-2">
+              <Label htmlFor="reg_city">Город *</Label>
+              <Input
+                id="reg_city"
+                value={formData.reg_city}
+                onChange={(e) => setFormData({ ...formData, reg_city: e.target.value })}
+                required
+                placeholder="Москва"
+              />
+            </div>
+          )}
 
-          <div className="space-y-2">
-            <Label htmlFor="vk_contact">ВКонтакте (ссылка на профиль или группу)</Label>
-            <Input
-              id="vk_contact"
-              value={formData.vk_contact || ""}
-              onChange={(e) => setFormData({ ...formData, vk_contact: e.target.value })}
-              placeholder="https://vk.com/id..."
-            />
-          </div>
+          {showVkContact && (
+            <div className="space-y-2">
+              <Label htmlFor="vk_contact">ВКонтакте (ссылка на профиль или группу)</Label>
+              <Input
+                id="vk_contact"
+                value={formData.vk_contact || ""}
+                onChange={(e) => setFormData({ ...formData, vk_contact: e.target.value })}
+                placeholder="https://vk.com/id..."
+              />
+            </div>
+          )}
 
-          <div className="space-y-2">
-            <Label htmlFor="contact2">Дополнительный контакт</Label>
-            <Input
-              id="contact2"
-              value={formData.contact2 || ""}
-              onChange={(e) => setFormData({ ...formData, contact2: e.target.value })}
-              placeholder="Telegram, WhatsApp и т.д."
-            />
-          </div>
+          {showContact2 && (
+            <div className="space-y-2">
+              <Label htmlFor="contact2">Дополнительный контакт</Label>
+              <Input
+                id="contact2"
+                value={formData.contact2 || ""}
+                onChange={(e) => setFormData({ ...formData, contact2: e.target.value })}
+                placeholder="Telegram, WhatsApp и т.д."
+              />
+            </div>
+          )}
 
           {/* Номинации */}
           {nominations.length > 0 && (
